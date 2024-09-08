@@ -1,72 +1,24 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require("tailwindcss/defaultTheme");
-
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: "class", // Enable dark mode with class strategy
   theme: {
     extend: {
-      colors: {
-        primary: {
-          50: "#f0f9ff",
-          100: "#e0f2fe",
-          200: "#bae6fd",
-          300: "#7dd3fc",
-          400: "#38bdf8",
-          500: "#0ea5e9",
-          600: "#0284c7",
-          700: "#0369a1",
-          800: "#075985",
-          900: "#0c4a6e",
-        },
-        secondary: {
-          50: "#f8fafc",
-          100: "#f1f5f9",
-          200: "#e2e8f0",
-          300: "#cbd5e1",
-          400: "#94a3b8",
-          500: "#64748b",
-          600: "#475569",
-          700: "#334155",
-          800: "#1e293b",
-          900: "#0f172a",
-        },
+      textColor: {
+        primary: "#ffffff",
+        secondary: "#46393a",
+        tertiary: "#0e0a1a",
       },
-      fontFamily: {
-        sans: ["Inter var", ...defaultTheme.fontFamily.sans],
+      backgroundColor: {
+        primary: "#0c0a15",
+        secondary: "#eff0f6",
+        tertiary: "#f7f7fc",
       },
-      boxShadow: {
-        "inner-lg": "inset 0 2px 4px 0 rgb(0 0 0 / 0.10)",
+      borderColor: {
+        primary: "linear-gradient(90deg, #f7f7fc 0%, #eff0f6 100%)",
+        secondary: "#ffffff",
+        tertiary: "#0e0a1a",
       },
-      typography: (theme) => ({
-        DEFAULT: {
-          css: {
-            color: theme("colors.gray.700"),
-            a: {
-              color: theme("colors.primary.500"),
-              "&:hover": {
-                color: theme("colors.primary.600"),
-              },
-            },
-          },
-        },
-        dark: {
-          css: {
-            color: theme("colors.gray.300"),
-            a: {
-              color: theme("colors.primary.400"),
-              "&:hover": {
-                color: theme("colors.primary.300"),
-              },
-            },
-          },
-        },
-      }),
     },
   },
-  plugins: [
-    require("@tailwindcss/forms"),
-    require("@tailwindcss/typography"),
-    require("@tailwindcss/aspect-ratio"),
-  ],
+  plugins: [],
 };

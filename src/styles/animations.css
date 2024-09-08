@@ -98,52 +98,44 @@
 }
 
 @keyframes slight-left {
-  0%,
+  0% {
+    transform: translateX(10px);
+    /* opacity: 0; */
+  }
   100% {
     transform: translateX(0);
-  }
-  50% {
-    transform: translateX(-5px);
+    /* opacity: 1; */
   }
 }
 
 @keyframes slight-right {
-  0%,
-  100% {
-    transform: translateX(0);
+  0% {
+    transform: translateX(-10px);
   }
-  50% {
-    transform: translateX(5px);
+  100% {
+    transform: translateX(0px);
   }
 }
 
 @keyframes slight-up {
-  0%,
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
   100% {
     transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
+    opacity: 1;
   }
 }
 
 @keyframes slight-down {
-  0%,
+  0% {
+    transform: translateY(-10px);
+    /* opacity: 0; */
+  }
   100% {
     transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
-  }
-}
-
-@keyframes slight-down {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
+    /* opacity: 1; */
   }
 }
 
@@ -183,6 +175,28 @@
   }
 }
 
+.underline-animation {
+  display: inline-block;
+  position: relative;
+}
+
+.underline-animation::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #000000;
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.underline-animation:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
@@ -214,16 +228,16 @@
   animation: shake 0.5s ease-in-out;
 }
 .animate-slight-left {
-  animation: slight-left 2s ease-in-out infinite;
+  animation: slight-left 2s ease-in-out;
 }
 .animate-slight-right {
-  animation: slight-right 2s ease-in-out infinite;
+  animation: slight-right 2s ease-in-out;
 }
 .animate-slight-up {
-  animation: slight-up 2s ease-in-out infinite;
+  animation: slight-up 1s ease-in-out;
 }
 .animate-slight-down {
-  animation: slight-down 2s ease-in-out infinite;
+  animation: slight-down 2s ease-in-out;
 }
 .animate-click-primary {
   animation: click-primary 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./styles/index.css";
 import "./styles/animations.css";
 import "./styles/designs.css";
+import "./styles/scrollbar.css";
 
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
