@@ -234,7 +234,7 @@
   animation: slight-right 2s ease-in-out;
 }
 .animate-slight-up {
-  animation: slight-up 1s ease-in-out;
+  animation: slight-up 0.5s ease-in-out;
 }
 .animate-slight-down {
   animation: slight-down 2s ease-in-out;

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { apiUrl } from "../../config";
+import axios from "axios";
 
 const Login = () => {
-  const [role, setRole] = useState("student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,7 +18,7 @@ const Login = () => {
     return re.test(password);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateEmail(email)) {
@@ -32,29 +33,51 @@ const Login = () => {
       return;
     }
 
-    if (!validatePassword(password)) {
-      toast.error(
-        "🔑 Password must be at least 6 characters long, contain at least one letter, one number, and one special character",
-        {
+    // if (!validatePassword(password)) {
+    //   toast.error(
+    //     "🔑 Password must be at least 6 characters long, contain at least one letter, one number, and one special character",
+    //     {
+    //       position: "top-center",
+    //       style: {
+    //         borderRadius: "50px",
+    //         background: "#333",
+    //         color: "#fff",
+    //       },
+    //     }
+    //   );
+    //   return;
+    // }
+
+    const url = `${apiUrl}/auth/login`;
+    const body = { email: email.toLowerCase(), password };
+
+    try {
+      const { data } = await axios.post(url, body);
+      if (data?.status === "success") {
+        toast.success("✅ Login successful!", {
           position: "top-center",
           style: {
             borderRadius: "50px",
             background: "#333",
             color: "#fff",
           },
-        }
-      );
-      return;
+        });
+        console.log(data);
+        localStorage.setItem("userToken", data?.data?.token);
+        localStorage.setItem("userRole", data?.data?.user?.role);
+        localStorage.setItem("userId", data?.data?.user?._id);
+        window.location.href = "/";
+      }
+    } catch (error) {
+      toast.error("❌ Login failed! Please try again", {
+        position: "top-center",
+        style: {
+          borderRadius: "50px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     }
-
-    toast.success("✅ Login successful!", {
-      position: "top-center",
-      style: {
-        borderRadius: "50px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
   };
 
   return (
@@ -66,41 +89,6 @@ const Login = () => {
         <p className="text-lg text-base text-gray-400">
           Select your role and enter email and password to login
         </p>
-      </div>
-      <div className="flex gap-5 items-center">
-        <button
-          type="button"
-          className={`py-[2px] rounded-md px-2 font-semibold ${
-            role === "student"
-              ? "bg-primary text-white"
-              : "bg-white text-tertiary"
-          } border-[2px] border-tertiary`}
-          onClick={() => setRole("student")}
-        >
-          Student
-        </button>
-        <button
-          type="button"
-          className={`py-[2px] rounded-md px-2 font-semibold ${
-            role === "instructor"
-              ? "bg-primary text-white"
-              : "bg-white text-tertiary"
-          } border-[2px] border-tertiary`}
-          onClick={() => setRole("instructor")}
-        >
-          Instructor
-        </button>
-        <button
-          type="button"
-          className={`py-[2px] rounded-md px-2 font-semibold ${
-            role === "admin"
-              ? "bg-primary text-white"
-              : "bg-white text-tertiary"
-          } border-[2px] border-tertiary`}
-          onClick={() => setRole("admin")}
-        >
-          Admin
-        </button>
       </div>
 
       <form

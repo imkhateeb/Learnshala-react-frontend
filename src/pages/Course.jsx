@@ -7,6 +7,7 @@ const Course = () => {
       <Routes>
         <Route path="/" element={<Courses />} />
         <Route path="/:courseId" element={<CourseDetail />} />
+        <Route path="/enrolled" element={<CourseDetail />} />
       </Routes>
     </>
   );
