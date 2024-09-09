@@ -6,22 +6,30 @@ import axios from "axios";
 
 const userToken = localStorage.getItem("userToken");
 
-const AddReview = ({ onClose, onConfirm, courseId }) => {
-  const [rating, setRating] = useState(5);
-  const [review, setReview] = useState("");
-  const [addingReview, setAddingReview] = useState(false);
+const AddSyllabus = ({ onClose, onConfirm, courseId }) => {
+  const [topic, setTopic] = useState("");
+  const [description, setDescription] = useState("");
+  const [addingSyllabus, setAddingSyllabus] = useState(false);
 
-  const handleAddReview = async () => {
-    if (!review?.trim()) {
-      toast.error("Review is required");
+  const handleAddSyllabus = async () => {
+    if (!topic?.trim()) {
+      toast.error("Topic is required");
       return;
     }
-    const url = `${apiUrl}/courses/${courseId}/review`;
+    if (!description?.trim()) {
+      toast.error("Description is required");
+      return;
+    }
+    if (description?.trim().length < 50) {
+      toast.error("Description must be at least 50 characters long");
+      return;
+    }
+    const url = `${apiUrl}/courses/${courseId}/add-syllabus`;
     const reviewData = {
-      rating,
-      review,
+      topic,
+      description,
     };
-    setAddingReview(true);
+    setAddingSyllabus(true);
     try {
       const { data } = await axios.post(url, reviewData, {
         headers: {
@@ -29,7 +37,7 @@ const AddReview = ({ onClose, onConfirm, courseId }) => {
         },
       });
       if (data?.status === "success") {
-        toast.success("Review added successfully", {
+        toast.success("Syllabus added successfully", {
           icon: "🚀",
           position: "top-center",
           style: {
@@ -45,40 +53,41 @@ const AddReview = ({ onClose, onConfirm, courseId }) => {
     } catch (error) {
       toast.error(error?.response?.data?.error?.msg);
     } finally {
-      setAddingReview(false);
-      onClose();
+      setAddingSyllabus(false);
+      onClose(false);
     }
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white text-black rounded-3xl p-8 w-[90%] max-w-md mx-auto animate-slight-up">
-        <h2 className="text-xl font-bold mb-4">Add A Review</h2>
+        <h2 className="text-xl font-bold mb-4">Add Syllabus</h2>
         <div className="flex flex-col w-full gap-2 mb-4">
-          <Rate
-            allowHalf
-            defaultValue={rating}
-            onChange={(e) => setRating(e)}
-          />
           <input
             type="text"
-            onChange={(e) => setReview(e.target.value)}
-            placeholder="Write a review..."
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="Enter Topic..."
             className="w-[300px] w-full h-[50px] bg-transparent rounded-full outline-none border-[2px] focus:border-tertiary border-gray-400 px-5 placeholder:text-gray-400 text-tertiary transition-all duration-300 ease-in-out"
+          />
+          <textarea
+            type="text"
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter Description..."
+            className="w-[300px] w-full bg-transparent rounded-lg outline-none border-[2px] focus:border-tertiary border-gray-400 p-2 placeholder:text-gray-400 text-tertiary transition-all duration-300 ease-in-out"
           />
         </div>
         <div className="flex justify-end gap-4">
           <button
-            onClick={onClose}
+            onClick={() => onClose(false)}
             className="px-4 py-2 border-tertiary border-[2px] rounded-full hover:bg-primary hover:text-white transition-all duration-300 ease-in-out"
           >
             Cancel
           </button>
           <button
-            onClick={handleAddReview}
+            onClick={handleAddSyllabus}
             className="px-4 py-2 border-tertiary border-[2px] rounded-full bg-primary text-white transition-all duration-300 ease-in-out hover:bg-tertiary hover:text-tertiary"
           >
-            {addingReview ? "Adding..." : "Add Review"}
+            {addingSyllabus ? "Adding..." : "Add Syllabus"}
           </button>
         </div>
       </div>
@@ -86,4 +95,4 @@ const AddReview = ({ onClose, onConfirm, courseId }) => {
   );
 };
 
-export default AddReview;
+export default AddSyllabus;

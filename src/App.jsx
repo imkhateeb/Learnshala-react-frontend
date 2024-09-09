@@ -17,6 +17,7 @@ import { getCourses } from "./redux/reducers/getCourses";
 import { fetchUser } from "./redux/reducers/getUser";
 import Profile from "./pages/Profile";
 import { getEnrolledCourses } from "./redux/reducers/getEnrolledCourses";
+import { getInstructors } from "./redux/reducers/getInstructors";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const App = () => {
     dispatch(getCourses());
     dispatch(fetchUser());
     dispatch(getEnrolledCourses());
+    dispatch(getInstructors());
   }, []);
 
   return (

@@ -7,6 +7,7 @@ import axios from "axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -50,7 +51,7 @@ const Login = () => {
 
     const url = `${apiUrl}/auth/login`;
     const body = { email: email.toLowerCase(), password };
-
+    setIsLoggingIn(true);
     try {
       const { data } = await axios.post(url, body);
       if (data?.status === "success") {
@@ -62,7 +63,6 @@ const Login = () => {
             color: "#fff",
           },
         });
-        console.log(data);
         localStorage.setItem("userToken", data?.data?.token);
         localStorage.setItem("userRole", data?.data?.user?.role);
         localStorage.setItem("userId", data?.data?.user?._id);
@@ -77,6 +77,8 @@ const Login = () => {
           color: "#fff",
         },
       });
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -114,7 +116,7 @@ const Login = () => {
           className="p-4 w-full bg-primary text-white rounded-full text-xl font-bold"
           onClick={handleSubmit}
         >
-          Log in
+          {isLoggingIn ? "Logging..." : "Log in"}
         </button>
       </form>
 

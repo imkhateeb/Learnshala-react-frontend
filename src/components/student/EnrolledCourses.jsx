@@ -1,7 +1,8 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Funnel } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import EnrolledCourseCard from "./EnrolledCard";
+import { getEnrolledCourses } from "../../redux/reducers/getEnrolledCourses";
 
 const EnrolledCourses = () => {
   const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -9,6 +10,11 @@ const EnrolledCourses = () => {
     (state) => state.enrollments
   );
   const [filteredCourses, setFilteredCourses] = useState([]);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getEnrolledCourses());
+  }, []);
 
   const filterWithCourseNameOrInstructor = (value) => {
     const filteredCourses = enrolledCourses?.filter((course) => {

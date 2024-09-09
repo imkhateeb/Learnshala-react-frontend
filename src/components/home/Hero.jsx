@@ -14,9 +14,12 @@ const Hero = () => {
         {/* CTA's */}
         <div className="flex items-center gap-5 flex items-center justify-center">
           {/* Primary Button */}
-          <button className="responsive-para py-3 px-5 bg-white text-tertiary rounded-full hover:shadow-lg border-[2px] border-white hover:bg-primary hover:text-primary transition-all duration-300 ease-in-out">
+          <Link
+            to={"/courses"}
+            className="responsive-para py-3 px-5 bg-white text-tertiary rounded-full hover:shadow-lg border-[2px] border-white hover:bg-primary hover:text-primary transition-all duration-300 ease-in-out"
+          >
             Enroll Now
-          </button>
+          </Link>
           {/* Secondary Button */}
           <Link
             to={"#top-courses"}

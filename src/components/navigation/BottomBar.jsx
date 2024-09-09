@@ -80,22 +80,28 @@ const BottomBar = () => {
             </p>
           </Link>
         ) : (
-          <Link
-            to={item[userRole].url}
-            key={item[userRole].id + item[userRole].title}
-            className="flex flex-col items-center p-1.5"
-          >
-            {pathname === item[userRole].url
-              ? item[userRole].activeIcon
-              : item[userRole].icon}
-            <p
-              className={`text-xs font-semibold ${
-                pathname === item[userRole].url ? "text-black" : "text-gray-400"
-              }`}
+          (userRole === "student" ||
+            userRole === "instructor" ||
+            userRole === "admin") && (
+            <Link
+              to={item[userRole].url}
+              key={item[userRole].id + item[userRole].title}
+              className="flex flex-col items-center p-1.5"
             >
-              {item[userRole].title}
-            </p>
-          </Link>
+              {pathname === item[userRole].url
+                ? item[userRole].activeIcon
+                : item[userRole].icon}
+              <p
+                className={`text-xs font-semibold ${
+                  pathname === item[userRole].url
+                    ? "text-black"
+                    : "text-gray-400"
+                }`}
+              >
+                {item[userRole].title}
+              </p>
+            </Link>
+          )
         )
       )}
     </div>

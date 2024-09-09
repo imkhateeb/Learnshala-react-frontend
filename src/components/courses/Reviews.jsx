@@ -8,7 +8,7 @@ import AddReview from "./popups/AddReview";
 const userToken = localStorage.getItem("userToken");
 const userRole = localStorage.getItem("userRole");
 
-const Reviews = ({ reviews }) => {
+const Reviews = ({ reviews, getCourse, courseId }) => {
   const [reviewPopup, setReviewPopup] = useState(false);
   const { isEnrolled, isEnrolledLoading } = useSelector(
     (state) => state.enrollments
@@ -30,23 +30,27 @@ const Reviews = ({ reviews }) => {
   };
 
   const handleAddReview = () => {
-    // Handle enrollment logic here
+    getCourse({ firstLoad: false });
     setReviewPopup(false);
   };
 
   return (
     <>
       {reviewPopup && (
-        <AddReview onClose={handleClosePopup} onConfirm={handleAddReview} />
+        <AddReview
+          onClose={handleClosePopup}
+          courseId={courseId}
+          onConfirm={handleAddReview}
+        />
       )}
       <div
-        className={`w-1/2 relative max-sm:w-full overflow-y-auto bg-gray-300 bg-opacity-25 rounded-3xl max-sm:mx-auto flex flex-col gap-4 text-white p-4 pb-[40px] ${
+        className={`w-1/2 relative max-sm:w-full bg-gray-300 bg-opacity-25 rounded-3xl max-sm:mx-auto flex flex-col gap-4 text-white p-4 pb-[40px] ${
           reviews?.length === 0 ? "h-[30vh]" : "max-h-[90vh]"
         } ${reviewPopup ? "filter blur-sm" : ""}`}
       >
         <h2 className="text-xl font-bold">Reviews({reviews?.length})</h2>
         {reviews?.length > 0 ? (
-          <div className="py-5 flex flex-col">
+          <div className="py-5 flex flex-col max-w-[80vh] overflow-x-auto">
             {reviews?.map((item, idx) => (
               <div key={item?._id} className="flex gap-4">
                 <div className="flex flex-col items-center">

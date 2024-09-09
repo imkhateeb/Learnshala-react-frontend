@@ -12,6 +12,8 @@ import Reviews from "./Reviews";
 import { isEnrolled } from "../../redux/reducers/isEnrolled";
 import { useDispatch, useSelector } from "react-redux";
 import EnrollConfirmation from "./popups/EnrollConfirmation";
+import MarkAsCompleted from "./popups/MarkAsCompleted";
+import ProgressBar from "@ramonak/react-progress-bar";
 
 const CourseDetail = () => {
   const dispatch = useDispatch();
@@ -21,7 +23,8 @@ const CourseDetail = () => {
   // States
   const [loadingCourse, setLoadingCourse] = useState(false);
   const [course, setCourse] = useState(null);
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State for popup
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [markAsCompletePopup, setMarkAsCompletePopup] = useState(false);
 
   // Selector
   const { isEnrolled: isEnrolledCourse, isEnrolledLoading } = useSelector(
@@ -29,8 +32,10 @@ const CourseDetail = () => {
   );
 
   // Handler
-  const getCourse = async () => {
-    setLoadingCourse(true);
+  const getCourse = async ({ firstLoad }) => {
+    if (firstLoad) {
+      setLoadingCourse(true);
+    }
     const url = `${apiUrl}/courses/${courseId}`;
     try {
       const { data } = await axios.get(url);
@@ -47,22 +52,16 @@ const CourseDetail = () => {
     }
   };
 
-  const handleEnrollClick = () => {
-    setIsPopupOpen(true);
-  };
-
-  const handleClosePopup = () => {
+  const handleConfirm = async () => {
     setIsPopupOpen(false);
-  };
-
-  const handleConfirmEnroll = () => {
-    // Handle enrollment logic here
-    setIsPopupOpen(false);
+    setMarkAsCompletePopup(false);
+    dispatch(isEnrolled(courseId));
+    await getCourse({ firstLoad: false });
   };
 
   // Effects
   useEffect(() => {
-    getCourse();
+    getCourse({ firstLoad: true });
     dispatch(isEnrolled(courseId));
   }, [courseId]);
 
@@ -70,13 +69,36 @@ const CourseDetail = () => {
     <div className="relative bg-primary rounded-[50px] min-h-[85vh] flex flex-col w-[90%] max-md:w-[95%] mx-auto p-20 max-lg:p-10 max-sm:p-5 max-md:p-8 gap-5">
       {isPopupOpen && (
         <EnrollConfirmation
-          onClose={handleClosePopup}
-          onConfirm={handleConfirmEnroll}
+          onClose={() => setIsPopupOpen(false)}
+          onConfirm={handleConfirm}
+          courseId={courseId}
         />
+      )}
+      {markAsCompletePopup && (
+        <MarkAsCompleted
+          onClose={() => setMarkAsCompletePopup(false)}
+          onConfirm={handleConfirm}
+          courseId={courseId}
+        />
+      )}
+      {isEnrolledCourse && isEnrolledCourse?.progress >= 0 && (
+        <div className="absolute top-0 left-0 w-full h-[50px] rounded-t-[100px] px-8">
+          {isEnrolledCourse?.progress > 0 ? (
+            <ProgressBar
+              completed={isEnrolledCourse?.progress}
+              className="p-4"
+              bgColor="green"
+            />
+          ) : (
+            <p className="text-xl font-semibold text-gray-400 text-center p-2">
+              Hang tight, and start the course
+            </p>
+          )}
+        </div>
       )}
       <div
         className={`w-full flex gap-5 max-sm:flex-col overflow-hidden ${
-          isPopupOpen ? "filter blur-sm" : ""
+          isPopupOpen || markAsCompletePopup ? "filter blur-sm" : ""
         }`}
       >
         {loadingCourse ? (
@@ -98,7 +120,11 @@ const CourseDetail = () => {
                     {course?.description}
                   </p>
                   <div className="flex gap-3 items-center">
-                    <Like course={course} />
+                    <Like
+                      course={course}
+                      setCourse={getCourse}
+                      isDetail={true}
+                    />
                     <Enrolled enrolledStudents={course?.enrolledStudents} />
                     <p className="text-sm text-gray-300">
                       {course?.duration + " hrs"}
@@ -131,15 +157,27 @@ const CourseDetail = () => {
                 </div>
                 <div className="flex gap-3 max-sm:flex-col max-sm:gap-4 max-sm:mt-4">
                   {isEnrolledCourse ? (
-                    <div className="w-[250px] max-sm:w-full h-[60px] border-[2px] border-white text-white rounded-full font-semibold flex items-center justify-center text-lg hover:text-tertiary hover:bg-tertiary cursor-pointer transition-all duration-300 ease-in-out">
-                      Mark As Completed
-                    </div>
+                    isEnrolledCourse?.completed ? (
+                      <div className="flex flex-col">
+                        <p className="text-2xl font-semibold">Congrats 🎉</p>
+                        <p className="text-lg font-semibold">
+                          You have completed this course 🥳
+                        </p>
+                      </div>
+                    ) : (
+                      <div
+                        onClick={() => setMarkAsCompletePopup(true)}
+                        className="w-[250px] max-sm:w-full h-[60px] border-[2px] border-white text-white rounded-full font-semibold flex items-center justify-center text-lg hover:text-tertiary hover:bg-tertiary cursor-pointer transition-all duration-300 ease-in-out"
+                      >
+                        Mark As Completed
+                      </div>
+                    )
                   ) : isEnrolledLoading ? (
                     <div className="w-[250px] max-sm:w-full h-[60px] border-[2px] border-white rounded-full bg-gray-100 animate-pulse" />
                   ) : (
                     <div
                       className="w-[250px] max-sm:w-full h-[60px] border-[2px] border-white text-white rounded-full font-semibold flex items-center justify-center text-lg hover:text-tertiary hover:bg-tertiary cursor-pointer transition-all duration-300 ease-in-out"
-                      onClick={handleEnrollClick}
+                      onClick={() => setIsPopupOpen(true)}
                     >
                       Enroll Now
                     </div>
@@ -171,8 +209,18 @@ const CourseDetail = () => {
               )}
             </div>
             <div className="w-full flex gap-5 max-sm:flex-col">
-              <Syllabus syllabus={course?.syllabus} />
-              <Reviews reviews={course?.reviews} />
+              <Syllabus
+                syllabus={course?.syllabus}
+                instructor={course?.instructor}
+                courseId={course?._id}
+                getCourse={getCourse}
+                isEnrolledCourse={isEnrolledCourse}
+              />
+              <Reviews
+                reviews={course?.reviews}
+                courseId={course?._id}
+                getCourse={getCourse}
+              />
             </div>
           </div>
         )}

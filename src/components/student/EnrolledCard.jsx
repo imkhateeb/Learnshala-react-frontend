@@ -25,7 +25,7 @@ const EnrolledCourseCard = ({ course, completed, progress }) => {
             : course?.description}
         </div>
         <div className="flex items-center gap-5 text-white">
-          <Like course={course} />
+          <Like course={course} isDetail={true} isEnrolledCard={true} />
           <Enrolled enrolledStudents={course?.enrolledStudents} />
         </div>
         <div className="h-full flex flex-col justify-between">

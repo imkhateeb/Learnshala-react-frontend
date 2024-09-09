@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { apiUrl } from "../../config";
+import axios from "axios";
 
 const Signup = () => {
   const [role, setRole] = useState("student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,7 +26,7 @@ const Signup = () => {
     return name.trim() !== "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateName(name)) {
@@ -64,14 +68,32 @@ const Signup = () => {
       return;
     }
 
-    toast.success("✅ Login successful!", {
-      position: "top-center",
-      style: {
-        borderRadius: "50px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+    const url = `${apiUrl}/auth/register`;
+    const body = {
+      name,
+      email: email.toLowerCase(),
+      password,
+      role,
+    };
+    setIsSignUp(true);
+    try {
+      const { data } = await axios.post(url, body);
+      if (data?.status === "success") {
+        toast.success("✅Signup successful!", {
+          position: "top-center",
+          style: {
+            borderRadius: "50px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        navigate("/auth/signin");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.error?.msg);
+    } finally {
+      setIsSignUp(false);
+    }
   };
 
   return (
@@ -150,7 +172,7 @@ const Signup = () => {
           className="p-4 w-full bg-primary text-white rounded-full text-xl font-bold"
           onClick={handleSubmit}
         >
-          Register
+          {isSignUp ? "Registering..." : "Register"}
         </button>
       </form>
 
