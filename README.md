@@ -1,5 +1,7 @@
 # LearnShala Frontend
 
+This is an online course listing platform where admin can add a course, instructors can add syllabuses to that course and student can review, like and enroll into a course. Student can also track there progress in the course.
+
 [LearnShala](https://learnshala-react-frontend.vercel.app/)
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
