@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { getCourses } from "./reducers/getCourses";
 import { likeUnlikeCourse } from "./reducers/likeUnlikeCourse";
+import { getProgress } from "./reducers/getProgress";
 
 const initialState = {
   courses: [],
@@ -11,6 +12,9 @@ const initialState = {
   course: null,
   courseLoading: false,
   courseError: null,
+
+  progress: null,
+  progressLoading: false,
 };
 
 const courseSlice = createSlice({
@@ -34,6 +38,13 @@ const courseSlice = createSlice({
       state.courses = state.courses?.map((course) =>
         course._id === action.payload._id ? action.payload : course
       );
+    });
+    builder.addCase(getProgress.pending, (state) => {
+      state.progressLoading = true;
+    });
+    builder.addCase(getProgress.fulfilled, (state, action) => {
+      state.progressLoading = false;
+      state.progress = action.payload;
     });
   },
 });

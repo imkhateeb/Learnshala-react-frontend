@@ -5,6 +5,8 @@ import { Check } from "@phosphor-icons/react";
 import toast from "react-hot-toast";
 import { apiUrl } from "../../config";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { getProgress } from "../../redux/reducers/getProgress";
 
 const userRole = localStorage.getItem("userRole");
 const userId = localStorage.getItem("userId");
@@ -18,6 +20,7 @@ const Syllabus = ({
   isEnrolledCourse,
 }) => {
   const [addSyllabusPopup, setAddSyllabusPopup] = useState(false);
+  const dispatch = useDispatch();
 
   const handleAddSyllabus = () => {
     getCourse({ firstLoad: false });
@@ -57,6 +60,7 @@ const Syllabus = ({
           },
         });
         getCourse({ firstLoad: false });
+        dispatch(getProgress(courseId));
       }
     } catch (error) {
       console.log(error);
@@ -88,7 +92,7 @@ const Syllabus = ({
               <div key={item?._id} className="flex gap-4">
                 <div className="flex flex-col items-center">
                   <div>
-                    {!item?.completed ? (
+                    {!item?.completed?.includes(userId) ? (
                       <div
                         onClick={() => {
                           if (!userToken) {
@@ -119,7 +123,9 @@ const Syllabus = ({
                   </div>
                   <div
                     className={`h-full w-[2px] bg-opacity-50 ${
-                      item?.completed ? "bg-green-500" : "bg-white"
+                      item?.completed?.includes(userId)
+                        ? "bg-green-500"
+                        : "bg-white"
                     }`}
                   />
                 </div>

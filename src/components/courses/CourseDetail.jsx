@@ -14,6 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import EnrollConfirmation from "./popups/EnrollConfirmation";
 import MarkAsCompleted from "./popups/MarkAsCompleted";
 import ProgressBar from "@ramonak/react-progress-bar";
+import toast from "react-hot-toast";
+import { getProgress } from "../../redux/reducers/getProgress";
+
+const userToken = localStorage.getItem("userToken");
+const userRole = localStorage.getItem("userRole");
 
 const CourseDetail = () => {
   const dispatch = useDispatch();
@@ -25,6 +30,8 @@ const CourseDetail = () => {
   const [course, setCourse] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [markAsCompletePopup, setMarkAsCompletePopup] = useState(false);
+
+  const { progress, progressLoading } = useSelector((state) => state.courses);
 
   // Selector
   const { isEnrolled: isEnrolledCourse, isEnrolledLoading } = useSelector(
@@ -59,14 +66,37 @@ const CourseDetail = () => {
     await getCourse({ firstLoad: false });
   };
 
+  const handleLoginToast = async () => {
+    toast.error("Please login to enroll the course", {
+      position: "top-center",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+  };
+
+  const handleStudentAccessToast = async () => {
+    toast.error("Only students can enroll the course", {
+      position: "top-center",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+  };
+
   // Effects
   useEffect(() => {
     getCourse({ firstLoad: true });
     dispatch(isEnrolled(courseId));
+    dispatch(getProgress(courseId));
   }, [courseId]);
 
   return (
-    <div className="relative bg-primary rounded-[50px] min-h-[85vh] flex flex-col w-[90%] max-md:w-[95%] mx-auto p-20 max-lg:p-10 max-sm:p-5 max-md:p-8 gap-5">
+    <div className="relative bg-primary rounded-[50px] min-h-[85vh] flex flex-col w-[90%] max-md:w-[95%] mx-auto p-20 max-lg:p-10 max-sm:p-6 max-md:p-8 gap-5">
       {isPopupOpen && (
         <EnrollConfirmation
           onClose={() => setIsPopupOpen(false)}
@@ -82,18 +112,14 @@ const CourseDetail = () => {
         />
       )}
       {isEnrolledCourse && isEnrolledCourse?.progress >= 0 && (
-        <div className="absolute top-0 left-0 w-full h-[50px] rounded-t-[100px] px-8">
-          {isEnrolledCourse?.progress > 0 ? (
-            <ProgressBar
-              completed={isEnrolledCourse?.progress}
-              className="p-4"
-              bgColor="green"
-            />
-          ) : (
-            <p className="text-xl font-semibold text-gray-400 text-center p-2">
-              Hang tight, and start the course
-            </p>
-          )}
+        <div className="absolute -top-6 left-0 w-full h-[50px] rounded-t-[100px] px-4">
+          <ProgressBar
+            completed={isEnrolledCourse?.completed ? 100 : progress || 0}
+            className="p-4"
+            bgColor="green"
+            transitionDuration="2s"
+            animateOnRender={true}
+          />
         </div>
       )}
       <div
@@ -166,7 +192,15 @@ const CourseDetail = () => {
                       </div>
                     ) : (
                       <div
-                        onClick={() => setMarkAsCompletePopup(true)}
+                        onClick={() => {
+                          if (!userToken) {
+                            handleLoginToast();
+                          } else if (userRole !== "student") {
+                            handleStudentAccessToast();
+                          } else {
+                            setMarkAsCompletePopup(true);
+                          }
+                        }}
                         className="w-[250px] max-sm:w-full h-[60px] border-[2px] border-white text-white rounded-full font-semibold flex items-center justify-center text-lg hover:text-tertiary hover:bg-tertiary cursor-pointer transition-all duration-300 ease-in-out"
                       >
                         Mark As Completed
@@ -177,7 +211,15 @@ const CourseDetail = () => {
                   ) : (
                     <div
                       className="w-[250px] max-sm:w-full h-[60px] border-[2px] border-white text-white rounded-full font-semibold flex items-center justify-center text-lg hover:text-tertiary hover:bg-tertiary cursor-pointer transition-all duration-300 ease-in-out"
-                      onClick={() => setIsPopupOpen(true)}
+                      onClick={() => {
+                        if (!userToken) {
+                          handleLoginToast();
+                        } else if (userRole !== "student") {
+                          handleStudentAccessToast();
+                        } else {
+                          setIsPopupOpen(true);
+                        }
+                      }}
                     >
                       Enroll Now
                     </div>

@@ -13,7 +13,7 @@ const ConfirmLogout = ({ onClose }) => {
           color: "#fff",
         },
       });
-      window.location.reload();
+      window.location.href = "/";
     } catch (error) {
       console.log(error);
     }
