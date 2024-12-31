@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-scroll";
 
 const Hero = () => {
   return (
@@ -22,8 +22,10 @@ const Hero = () => {
           </Link>
           {/* Secondary Button */}
           <Link
-            to={"#top-courses"}
-            className="responsive-para py-3 px-5 hover:bg-white hover:text-tertiary rounded-full hover:shadow-lg border-[2px] border-white bg-primary text-primary transition-all duration-300 ease-in-out"
+            to="top-courses"
+            smooth={true}
+            duration={200}
+            className="responsive-para py-3 px-5 cursor-pointer hover:bg-white hover:text-tertiary rounded-full hover:shadow-lg border-[2px] border-white bg-primary text-primary transition-all duration-300 ease-in-out"
           >
             Top Courses
           </Link>
