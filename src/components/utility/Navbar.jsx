@@ -75,7 +75,7 @@ const Navbar = () => {
 
   return (
     <>
-      {logoutPopup && <ConfirmLogout onClose={setlogoutPopup} />}
+      {logoutPopup && <ConfirmLogout onClose={() => setlogoutPopup(false)} />}
       <div
         className={`w-[90%] max-md:w-[95%] mx-auto py-5 flex justify-between items-center  ${
           logoutPopup ? "filter blur-sm" : ""
