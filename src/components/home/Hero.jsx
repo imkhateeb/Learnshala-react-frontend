@@ -12,11 +12,11 @@ const Hero = () => {
           aspirations.
         </p>
         {/* CTA's */}
-        <div className="flex items-center gap-5 flex items-center justify-center">
+        <div className="flex items-center gap-5 items-center justify-center">
           {/* Primary Button */}
           <Link
             to={"/courses"}
-            className="responsive-para py-3 px-5 bg-white text-tertiary rounded-full hover:shadow-lg border-[2px] border-white hover:bg-primary hover:text-primary transition-all duration-300 ease-in-out"
+            className="responsive-para py-3 px-5 bg-white text-tertiary rounded-full hover:shadow-lg border-[2px] border-white hover:bg-primary hover:text-primary transition-all duration-300 ease-in-out cursor-pointer"
           >
             Enroll Now
           </Link>
