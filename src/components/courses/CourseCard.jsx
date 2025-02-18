@@ -6,8 +6,12 @@ const CourseCard = ({ course }) => {
   return (
     <div className="flex gap-4 w-full max-sm:flex-col">
       <div>
-        {course?.thumbnail ? (
-          <div className="w-[180px] h-[180px] bg-gray-100 rounded-lg max-sm:mx-auto" />
+        {course?.thumbnail?.includes("res.cloudinary.com") ? (
+          <img
+            src={course.thumbnail}
+            alt={course.name}
+            className="w-[180px] h-[180px] bg-gray-100 rounded-lg max-sm:mx-auto object-cover"
+          />
         ) : (
           <div className="w-[180px] h-[180px] bg-gray-100 rounded-lg max-sm:mx-auto" />
         )}

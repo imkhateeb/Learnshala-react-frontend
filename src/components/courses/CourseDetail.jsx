@@ -132,7 +132,15 @@ const CourseDetail = () => {
         ) : (
           <div className="flex flex-col w-full gap-5 text-white">
             <div className="flex max-md:flex-col gap-5 w-full">
-              <div className="w-[300px] h-[300px] rounded-3xl bg-gray-100 max-sm:mx-auto" />
+              {course?.thumbnail?.includes("res.cloudinary.com") ? (
+                <img
+                  src={course.thumbnail}
+                  alt={course.name}
+                  className="w-[300px] h-[300px] bg-gray-100 rounded-lg max-sm:mx-auto object-cover"
+                />
+              ) : (
+                <div className="w-[300px] h-[300px] rounded-3xl bg-gray-100 max-sm:mx-auto" />
+              )}
               <div className="w-1/2 max-md:w-full flex flex-col justify-between gap-2">
                 <div className="flex flex-col gap-2 w-full">
                   <p className="text-sm text-gray-300">

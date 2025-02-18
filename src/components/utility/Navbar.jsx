@@ -175,7 +175,7 @@ const Navbar = () => {
               <div>
                 <div
                   onClick={() => setshowSiderbar(!showSiderbar)}
-                  className="flex items-center gap-1 border-[1px] border-gray-300 rounded-full pr-5 cursor-pointer"
+                  className="flex items-center gap-1 border-[1px] border-gray-300 rounded-full pr-5 cursor-pointer active:scale-95 transition-all duration-300 ease-in-out"
                 >
                   {user?.photo ? (
                     <img
@@ -187,9 +187,13 @@ const Navbar = () => {
                     <div className="w-[40px] h-[40px] bg-gray-400 rounded-full" />
                   )}
                   <div className="h-full flex flex-col leading-5 justify-between">
-                    <p className="font-semibold">{user?.name?.split(" ")[0]}</p>
+                    <p className="font-semibold">
+                      {user ? user?.name?.split(" ")[0] : "Guest"}
+                    </p>
                     <p className="text-xs text-gray-500">
-                      {`${user?.role[0]?.toUpperCase()}${user?.role?.slice(1)}`}
+                      {`${user ? user?.role[0]?.toUpperCase() : "G"}${
+                        user ? user?.role?.slice(1) : "uest"
+                      }`}
                     </p>
                   </div>
                 </div>

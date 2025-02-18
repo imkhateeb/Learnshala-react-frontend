@@ -53,7 +53,7 @@ const TopCourses = () => {
                         <img
                           src={course.thumbnail}
                           alt="Course Thumbnail"
-                          className="w-[100px] h-[100px] rounded-full"
+                          className="w-[100px] h-[100px] rounded-full object-cover"
                         />
                       ) : (
                         <div className="w-[100px] h-[100px] bg-gray-300 rounded-full" />
